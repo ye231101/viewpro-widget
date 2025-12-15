@@ -1,0 +1,41 @@
+{
+  "name": "viewpro-widget",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@livekit/components-react": "^2.9.17",
+    "axios": "^1.13.2",
+    "livekit-client": "^2.16.1",
+    "lucide-react": "^0.559.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "react-hot-toast": "^2.6.0",
+    "react-scripts": "^5.0.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.18"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
