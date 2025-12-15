@@ -36,7 +36,7 @@ function useMediaControls() {
 }
 
 // Participant Tile Component
-function ParticipantTile({ participant, isLarge = false }) {
+function ParticipantTile({ participant }) {
   const tracks = useTracks([{ source: Track.Source.Camera, withPlaceholder: true }], {
     onlySubscribed: false,
   }).filter((t) => t.participant.identity === participant.identity);
@@ -49,12 +49,7 @@ function ParticipantTile({ participant, isLarge = false }) {
     <div
       className={`
         vp-relative vp-overflow-hidden vp-rounded-lg vp-bg-gradient-to-br vp-from-slate-800 vp-to-slate-900 vp-transition-all vp-duration-300 vp-ease-out
-        ${isLarge ? 'vp-col-span-2 vp-row-span-2' : ''}
-        ${
-          isSpeaking
-            ? 'vp-ring-2 vp-ring-emerald-400 vp-ring-offset-2 vp-ring-offset-slate-950'
-            : ''
-        }
+        ${isSpeaking && 'vp-ring-2 vp-ring-emerald-400 vp-ring-offset-2 vp-ring-offset-slate-950'}
       `}
     >
       {/* Video Stream */}
@@ -118,11 +113,7 @@ function VideoGrid() {
       className={`vp-w-full vp-h-full vp-grid ${gridCols} vp-auto-rows-fr md:vp-rounded-lg md:vp-shadow-lg`}
     >
       {remoteParticipants.map((participant) => (
-        <ParticipantTile
-          key={participant.identity}
-          participant={participant}
-          isLarge={remoteParticipants.length === 1}
-        />
+        <ParticipantTile key={participant.identity} participant={participant} />
       ))}
     </div>
   );
