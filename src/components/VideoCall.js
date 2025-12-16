@@ -11,8 +11,9 @@ import {
   useRoomContext,
 } from '@livekit/components-react';
 import { Track, AudioPresets, DataPacket_Kind } from 'livekit-client';
+import { io } from 'socket.io-client';
 import { api } from '../utils/api';
-import { AVATAR_URL, LIVEKIT_URL, USERNAME } from '../utils/constants';
+import { AVATAR_URL, LIVEKIT_URL, SERVER_URL, USERNAME } from '../utils/constants';
 
 // Configuration
 const ROOM_NAME = 'test-room';
@@ -37,18 +38,31 @@ function useMediaControls() {
 
 // Participant Tile Component
 function ParticipantTile({ participant }) {
-  const tracks = useTracks([{ source: Track.Source.Camera, withPlaceholder: true }], {
-    onlySubscribed: false,
-  }).filter((t) => t.participant.identity === participant.identity);
+  const tracks = useTracks(
+    [
+      { source: Track.Source.Camera, withPlaceholder: true },
+      { source: Track.Source.ScreenShare, withPlaceholder: false },
+    ],
+    {
+      onlySubscribed: false,
+    }
+  ).filter((t) => t.participant.identity === participant.identity);
 
-  const videoTrack = tracks.find((t) => t.source === Track.Source.Camera && t.publication?.track);
+  // Prioritize screen share, fallback to camera
+  const screenShareTrack = tracks.find(
+    (t) => t.source === Track.Source.ScreenShare && t.publication?.track
+  );
+  const cameraTrack = tracks.find(
+    (t) => t.source === Track.Source.Camera && t.publication?.track
+  );
+  const videoTrack = screenShareTrack || cameraTrack;
   const isSpeaking = participant.isSpeaking;
   const isMuted = !participant.isMicrophoneEnabled;
 
   return (
     <div
       className={`
-        vp-relative vp-overflow-hidden vp-rounded-lg vp-bg-gradient-to-br vp-from-slate-800 vp-to-slate-900 vp-transition-all vp-duration-300 vp-ease-out
+        vp-relative vp-overflow-hidden md:vp-rounded-lg vp-bg-gradient-to-br vp-from-slate-800 vp-to-slate-900 vp-transition-all vp-duration-300 vp-ease-out
         ${isSpeaking && 'vp-ring-2 vp-ring-emerald-400 vp-ring-offset-2 vp-ring-offset-slate-950'}
       `}
     >
@@ -211,8 +225,8 @@ function MessagesContainer({ messages, messagesRef, offset }) {
 function RoomContainer({ onLeave }) {
   const room = useRoomContext();
 
-  const [message, setMessage] = useState('');
   const [offset, setOffset] = useState(0);
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const messagesRef = useRef(null);
 
@@ -407,32 +421,94 @@ function RoomScreen({ token, onLeave }) {
 
 // Lobby Screen Component
 function LobbyScreen({ onJoin }) {
-  return (
-    <div
-      onClick={() => onJoin(ROOM_NAME, USERNAME)}
-      className="vp-fixed vp-bottom-5 vp-right-5 vp-z-[9999] vp-flex vp-items-center vp-justify-center vp-cursor-pointer"
-    >
-      <div className="vp-w-[92px] vp-h-[92px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-gradient-to-tr vp-from-yellow-400 vp-via-pink-500 vp-to-purple-500">
-        <div className="vp-w-[84px] vp-h-[84px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-white">
-          <div className="vp-relative vp-w-[76px] vp-h-[76px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-gray-800">
-            <div className="vp-wave" />
-            <div className="vp-wave" />
-            <div className="vp-wave" />
-            <div className="vp-wave" />
-            <img
-              src={AVATAR_URL + 'volkmar.jpg'}
-              alt="avatar"
-              crossOrigin="anonymous"
-              className="vp-w-[56px] vp-h-[56px] vp-rounded-full vp-avatar-pulse"
-            />
+  const [userList, setUserList] = useState([]);
+
+  useEffect(() => {
+    const uid = USERNAME + '-' + Date.now().toString();
+
+    const socket = io(SERVER_URL, {
+      query: {
+        uid,
+      },
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected to socket:', uid);
+      getCheck();
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from socket:', uid);
+      getCheck();
+    });
+
+    socket.on('user:logout', () => {
+      getCheck();
+    });
+
+    socket.on('user:available', () => {
+      getCheck();
+    });
+
+    socket.on('user:unavailable', () => {
+      getCheck();
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('user:logout');
+      socket.off('user:available');
+      socket.off('user:unavailable');
+      socket.off('connect_error');
+      socket.disconnect();
+    };
+  }, []);
+
+  const getCheck = async () => {
+    try {
+      const { data } = await api.post('/user/check');
+      setUserList(data.users);
+    } catch (err) {
+      console.error('Failed to get user list', err);
+      toast.error('Failed to get user list');
+    }
+  };
+
+  if (userList.length > 0) {
+    return (
+      <div
+        onClick={() => onJoin(ROOM_NAME, USERNAME)}
+        className="vp-fixed vp-bottom-5 vp-right-5 vp-z-[9999] vp-flex vp-items-center vp-justify-center vp-cursor-pointer"
+      >
+        <div className="vp-w-[92px] vp-h-[92px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-gradient-to-tr vp-from-yellow-400 vp-via-pink-500 vp-to-purple-500">
+          <div className="vp-w-[84px] vp-h-[84px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-white">
+            <div className="vp-relative vp-w-[76px] vp-h-[76px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-gray-800">
+              <div className="vp-wave" />
+              <div className="vp-wave" />
+              <div className="vp-wave" />
+              <div className="vp-wave" />
+              <img
+                src={AVATAR_URL + 'volkmar.jpg'}
+                alt="avatar"
+                crossOrigin="anonymous"
+                className="vp-w-[56px] vp-h-[56px] vp-rounded-full vp-avatar-pulse"
+              />
+            </div>
           </div>
+          <span className="vp-absolute vp--bottom-1 vp-left-1/2 vp--translate-x-1/2 vp-rounded vp-border-2 vp-border-white vp-bg-pink-600 vp-px-2 vp-text-[10px] vp-leading-normal vp-font-bold vp-text-white">
+            LIVE
+          </span>
         </div>
-        <span className="vp-absolute vp--bottom-1 vp-left-1/2 vp--translate-x-1/2 vp-rounded vp-border-2 vp-border-white vp-bg-pink-600 vp-px-2 vp-text-[10px] vp-leading-normal vp-font-bold vp-text-white">
-          LIVE
-        </span>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 }
 
 // Main App Component
