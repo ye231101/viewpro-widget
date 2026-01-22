@@ -17,7 +17,7 @@ api.interceptors.request.use(
   (error) => {
     toast.error(error.response?.data?.message || error.message || 'Something went wrong');
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.response.use(
@@ -36,5 +36,5 @@ api.interceptors.response.use(
   async (error) => {
     toast.error(error.response?.data?.message || error.message || 'Something went wrong');
     return Promise.reject(error);
-  }
+  },
 );

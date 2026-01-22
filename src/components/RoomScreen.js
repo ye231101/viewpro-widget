@@ -38,11 +38,11 @@ function ParticipantTile({ participant }) {
     ],
     {
       onlySubscribed: false,
-    }
+    },
   ).filter((t) => t.participant.identity === participant.identity);
 
   const screenShareTrack = tracks.find(
-    (t) => t.source === Track.Source.ScreenShare && t.publication?.track
+    (t) => t.source === Track.Source.ScreenShare && t.publication?.track,
   );
   const cameraTrack = tracks.find((t) => t.source === Track.Source.Camera && t.publication?.track);
   const videoTrack = screenShareTrack || cameraTrack;
@@ -130,9 +130,7 @@ function ControlBar({ onLeave }) {
           crossOrigin="anonymous"
           className="vp-w-10 vp-h-10 vp-rounded-full"
         />
-        <span className="vp-text-white vp-text-lg vp-font-bold">
-          Agent
-        </span>
+        <span className="vp-text-white vp-text-lg vp-font-bold">Agent</span>
       </div>
       <div className="vp-flex vp-flex-row vp-items-center vp-gap-4">
         <div className="vp-text-white vp-text-base vp-font-bold vp-tracking-widest vp-bg-pink-500 vp-rounded-sm vp-px-2 vp-py-1">
@@ -216,7 +214,9 @@ function RoomContainer({ onLeave }) {
   const hadRemoteParticipantRef = useRef(false);
 
   useEffect(() => {
-    const remoteParticipants = participants.filter((p) => p.identity !== localParticipant?.identity);
+    const remoteParticipants = participants.filter(
+      (p) => p.identity !== localParticipant?.identity,
+    );
 
     if (remoteParticipants.length > 0) {
       hadRemoteParticipantRef.current = true;
