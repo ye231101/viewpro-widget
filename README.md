@@ -1,70 +1,203 @@
-# Getting Started with Create React App
+# ViewPro Widget
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based embeddable widget for the ViewPro video calling and collaboration platform, featuring real-time communication via LiveKit and seamless integration into any web application.
 
-## Available Scripts
+## Project Overview
 
-In the project directory, you can run:
+ViewPro Widget is a standalone, embeddable React component that provides video calling functionality. It integrates with LiveKit for WebRTC infrastructure and can be easily embedded into any website or web application as a widget.
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (v14 or higher)
+- npm or yarn
+- LiveKit server instance
+- ViewPro backend API endpoint
 
-### `npm test`
+### Setup Steps
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd viewpro-widget
+   ```
 
-### `npm run build`
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Configure environment variables**
+   - Create a `.env` file in the root directory
+   - Add required environment variables:
+     ```
+     REACT_APP_API_URL=<your-backend-api-url>
+     REACT_APP_LIVEKIT_URL=<your-livekit-server-url>
+     ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. **Build the widget**
+   ```bash
+   npm run build:webpack
+   ```
+   This will generate the widget bundle in the `dist` folder.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running the Application
 
-### `npm run eject`
+### Development Mode
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Production Build
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm run build
+```
 
-## Learn More
+Builds the app for production using Create React App, optimized for the best performance.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Webpack Build (Widget Bundle)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm run build:webpack
+```
 
-### Code Splitting
+Builds the widget as a standalone UMD bundle (`viewpro-widget.js`) in the `dist` folder that can be embedded in any website.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Usage
 
-### Analyzing the Bundle Size
+### Embedding the Widget
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Include the built widget script in your HTML:
+   ```html
+   <script src="path/to/viewpro-widget.js"></script>
+   ```
 
-### Making a Progressive Web App
+2. The widget will automatically initialize and render when the page loads.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Git Workflow & Commit Guidelines
 
-### Advanced Configuration
+### Commit Message Format
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Follow the Conventional Commits specification:
 
-### Deployment
+```
+<type>(<scope>): <subject>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+<body>
 
-### `npm run build` fails to minify
+<footer>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Types:**
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, missing semicolons, etc.)
+- `refactor:` - Code refactoring without feature changes
+- `test:` - Adding or updating tests
+- `chore:` - Build process, dependencies, tooling
+- `perf:` - Performance improvements
+
+**Examples:**
+
+```bash
+# Feature commit
+git commit -m "feat(video): add screen sharing functionality"
+
+# Bug fix commit
+git commit -m "fix(connection): resolve LiveKit connection timeout issue
+
+- Increased timeout threshold from 10s to 30s
+- Added retry logic for failed connections"
+
+# Documentation update
+git commit -m "docs(readme): add installation instructions"
+
+# Breaking change
+git commit -m "feat(api)!: change widget initialization API
+
+BREAKING CHANGE: Widget now requires container ID parameter"
+```
+
+### Commit Best Practices
+
+1. **Make atomic commits** - One feature or fix per commit
+2. **Write descriptive messages** - Explain what and why, not how
+3. **Keep commits small** - Easier to review and debug
+4. **Test before committing** - Ensure code works
+5. **Don't commit sensitive data** - Use `.gitignore` for credentials
+6. **Reference issues** - Use `Fixes #123` or `Closes #456` in commit body
+
+### Standard Git Workflow
+
+```bash
+# Create feature branch
+git checkout -b feature/new-feature
+
+# Make changes and commit
+git add .
+git commit -m "feat(scope): description"
+
+# Keep branch updated
+git pull origin develop
+
+# Push to remote
+git push origin feature/new-feature
+
+# Create Pull Request and wait for review
+
+# Merge to develop after approval
+git checkout develop
+git merge --no-ff feature/new-feature
+git push origin develop
+
+# Merge to main for releases
+git checkout main
+git merge --no-ff develop
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin main --tags
+```
+
+## Deployment
+
+### Building for Production
+
+1. **Build the widget bundle**
+   ```bash
+   npm run build:webpack
+   ```
+
+2. **Deploy the `dist/viewpro-widget.js` file** to your CDN or static hosting service.
+
+3. **Update your HTML** to reference the deployed widget script.
+
+### Environment Setup
+
+Ensure production environment variables are properly configured before building. The widget bundle will include the environment variables at build time.
+
+## Troubleshooting
+
+### Common Issues
+
+- **Widget not rendering** - Verify the container element with id `viewpro-widget` exists in the DOM
+- **LiveKit connection fails** - Check `REACT_APP_LIVEKIT_URL` environment variable
+- **API calls failing** - Verify `REACT_APP_API_URL` is correctly set and accessible
+- **Build errors** - Ensure all dependencies are installed with `npm install`
+- **Cross-origin issues** - Check CORS settings on the backend API
+
+## Contributing
+
+1. Follow the Git Workflow section above
+2. Ensure code follows project standards
+3. Write descriptive commit messages
+4. Test thoroughly before creating PR
+5. Request code review from team members
+
+## Support
+
+For issues or questions, please create an issue in the repository or contact the development team.
