@@ -1,3 +1,4 @@
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import VideoCall from './components/VideoCall';
 import './App.css';
