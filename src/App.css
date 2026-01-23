@@ -1,5 +1,16 @@
 .vp-scrollbar-none {
-  scrollbar-width: none;
+  scrollbar-width: none !important;
+}
+
+.vp-message-input {
+  width: 100% !important;
+  padding: 8px 16px !important;
+  background-color: transparent !important;
+  border-radius: 9999px !important;
+  border: 1px solid #ccc !important;
+  outline: none !important;
+  font-size: 1rem !important;
+  color: #ffffff !important;
 }
 
 @keyframes vp-avatar-pulse {

@@ -163,7 +163,7 @@ function MessageInput({ message, setMessage, sendMessage }) {
           }
         }}
         placeholder="Add a comment..."
-        className="vp-w-full vp-px-4 vp-py-2 vp-rounded-full vp-border vp-outline-none vp-text-base vp-text-white vp-bg-transparent"
+        className="vp-message-input"
       />
       <Send size={24} onClick={sendMessage} className="vp-text-white vp-cursor-pointer" />
     </div>
