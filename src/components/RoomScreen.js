@@ -46,38 +46,12 @@ function ParticipantTile({ participant }) {
   );
   const cameraTrack = tracks.find((t) => t.source === Track.Source.Camera && t.publication?.track);
   const videoTrack = screenShareTrack || cameraTrack;
-  const isSpeaking = participant.isSpeaking;
-  const isMuted = !participant.isMicrophoneEnabled;
 
   return (
-    <div
-      className={`
-        vp-relative vp-overflow-hidden md:vp-rounded-lg vp-bg-gradient-to-br vp-from-slate-800 vp-to-slate-900 vp-transition-all vp-duration-300 vp-ease-out
-        ${isSpeaking && 'vp-ring-2 vp-ring-emerald-400 vp-ring-offset-2 vp-ring-offset-slate-950'}
-      `}
-    >
-      {videoTrack?.publication?.track ? (
-        <VideoTrack trackRef={videoTrack} className="vp-w-full vp-h-full vp-object-cover" />
-      ) : (
-        <div className="vp-w-full vp-h-full vp-flex vp-items-center vp-justify-center vp-bg-gradient-to-br vp-from-slate-700 vp-to-slate-800">
-          <div className="vp-w-20 vp-h-20 vp-rounded-full vp-bg-gradient-to-br vp-from-indigo-500 vp-to-purple-600 vp-flex vp-items-center vp-justify-center vp-text-white vp-text-2xl vp-font-semibold vp-shadow-xl">
-            {participant.identity?.charAt(0)?.toUpperCase() || 'U'}
-          </div>
-        </div>
+    <div className="vp-participant-tile">
+      {videoTrack?.publication?.track && (
+        <VideoTrack trackRef={videoTrack} className="vp-participant-tile-video" />
       )}
-
-      <div className="vp-absolute vp-bottom-0 vp-left-0 vp-right-0 vp-p-2 vp-flex vp-items-center vp-justify-end">
-        {isMuted && (
-          <div className="vp-p-1.5 vp-bg-red-500/80 vp-backdrop-blur-sm vp-rounded-lg">
-            <MicOff size={14} className="vp-text-white" />
-          </div>
-        )}
-        {isSpeaking && !isMuted && (
-          <div className="vp-p-1.5 vp-bg-emerald-500/80 vp-backdrop-blur-sm vp-rounded-lg vp-animate-pulse">
-            <Mic size={14} className="vp-text-white" />
-          </div>
-        )}
-      </div>
     </div>
   );
 }
@@ -90,27 +64,25 @@ function VideoGrid() {
 
   const gridCols =
     remoteParticipants.length <= 2
-      ? 'vp-grid-cols-1'
+      ? 'vp-video-grid-cols-1'
       : remoteParticipants.length <= 4
-        ? 'vp-grid-cols-2'
+        ? 'vp-video-grid-cols-2'
         : remoteParticipants.length <= 6
-          ? 'vp-grid-cols-3'
-          : 'vp-grid-cols-4';
+          ? 'vp-video-grid-cols-3'
+          : 'vp-video-grid-cols-4';
 
   if (remoteParticipants.length === 0) {
     return (
-      <div className="vp-w-full vp-h-full vp-flex vp-items-center vp-justify-center vp-bg-black md:vp-rounded-lg md:vp-shadow-lg">
-        <div className="vp-relative vp-w-16 vp-h-16 vp-rounded-full vp-object-cover">
-          <div className="vp-absolute vp-inset-0 vp-animate-spin vp-rounded-full vp-border-4 vp-border-t-white vp-border-r-transparent vp-border-b-transparent vp-border-l-transparent"></div>
+      <div className="vp-loading">
+        <div className="vp-loading-container">
+          <div className="vp-loading-icon" />
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className={`vp-w-full vp-h-full vp-grid ${gridCols} vp-auto-rows-fr md:vp-rounded-lg md:vp-shadow-lg`}
-    >
+    <div className={`vp-video-grid ${gridCols}`}>
       {remoteParticipants.map((participant) => (
         <ParticipantTile key={participant.identity} participant={participant} />
       ))}
@@ -122,28 +94,26 @@ function ControlBar({ onLeave }) {
   const { isMuted, toggleMute } = useMediaControls();
 
   return (
-    <div className="vp-absolute vp-top-4 vp-left-0 vp-right-0 vp-w-full vp-flex vp-flex-row vp-items-center vp-justify-between vp-gap-2 vp-px-4 vp-z-10">
-      <div className="vp-w-full vp-flex vp-flex-row vp-items-center vp-gap-2">
+    <div className="vp-control-bar">
+      <div className="vp-control-bar-info">
         <img
           src={AVATAR_URL + 'default.jpg'}
           alt="avatar"
           crossOrigin="anonymous"
-          className="vp-w-10 vp-h-10 vp-rounded-full"
+          className="vp-control-bar-avatar"
         />
-        <span className="vp-text-white vp-text-lg vp-font-bold">Agent</span>
+        <span className="vp-control-bar-name">Agent</span>
       </div>
-      <div className="vp-flex vp-flex-row vp-items-center vp-gap-4">
-        <div className="vp-text-white vp-text-base vp-font-bold vp-tracking-widest vp-bg-pink-500 vp-rounded-sm vp-px-2 vp-py-1">
-          LIVE
-        </div>
-        <X size={30} className="vp-text-white vp-cursor-pointer" onClick={onLeave} />
-        <div className="vp-absolute vp-top-20 vp-right-4 vp-z-10">
-          {isMuted ? (
-            <MicOff size={30} onClick={toggleMute} className="vp-text-white vp-cursor-pointer" />
-          ) : (
-            <Mic size={30} onClick={toggleMute} className="vp-text-white vp-cursor-pointer" />
-          )}
-        </div>
+      <div className="vp-control-bar-live">LIVE</div>
+      <div className="vp-control-bar-close-button">
+        <X size={30} className="vp-control-bar-button" onClick={onLeave} />
+      </div>
+      <div className="vp-control-bar-audio-button">
+        {isMuted ? (
+          <MicOff size={30} onClick={toggleMute} className="vp-control-bar-button" />
+        ) : (
+          <Mic size={30} onClick={toggleMute} className="vp-control-bar-button" />
+        )}
       </div>
     </div>
   );
@@ -151,7 +121,7 @@ function ControlBar({ onLeave }) {
 
 function MessageInput({ message, setMessage, sendMessage }) {
   return (
-    <div className="vp-absolute vp-bottom-10 vp-right-0 vp-w-full vp-flex vp-flex-row vp-items-center vp-justify-between vp-gap-2 vp-px-4">
+    <div className="vp-message-input-container">
       <input
         type="text"
         value={message}
@@ -165,7 +135,7 @@ function MessageInput({ message, setMessage, sendMessage }) {
         placeholder="Add a comment..."
         className="vp-message-input"
       />
-      <Send size={24} onClick={sendMessage} className="vp-text-white vp-cursor-pointer" />
+      <Send size={24} onClick={sendMessage} className="vp-message-send-button" />
     </div>
   );
 }
@@ -173,26 +143,25 @@ function MessageInput({ message, setMessage, sendMessage }) {
 function MessagesContainer({ messages, messagesRef, offset }) {
   return (
     <div
-      className="vp-absolute vp-left-[16px] vp-right-0 vp-z-10 vp-flex vp-flex-col vp-justify-end vp-w-[calc(100%-70px)]"
+      className="vp-messages-container"
       style={{
-        bottom: `${90 + offset}px`,
+        width: `calc(100% - 70px)`,
         height: `calc(100% - ${160 + offset}px)`,
+        bottom: `${90 + offset}px`,
       }}
     >
-      <div className="vp-w-full vp-flex vp-flex-col vp-items-start vp-gap-2 vp-overflow-y-auto vp-break-words vp-scrollbar-none">
+      <div className="vp-messages">
         {messages.map((msg, idx) => (
-          <div key={idx} className="vp-w-full vp-flex vp-flex-row vp-gap-2">
+          <div key={idx} className="vp-message-container">
             <img
               src={msg.username === username ? AVATAR_URL + 'default.jpg' : AVATAR_URL + msg.avatar}
               alt="avatar"
               crossOrigin="anonymous"
-              className="vp-w-10 vp-h-10 vp-rounded-full"
+              className="vp-message-avatar"
             />
-            <div className="vp-flex vp-flex-col">
-              <span className="vp-text-white vp-text-sm vp-font-bold">{msg.username}</span>
-              <span className="vp-inline-block vp-text-white vp-text-base vp-break-all">
-                {msg.text}
-              </span>
+            <div className="vp-message">
+              <span className="vp-message-name">{msg.username}</span>
+              <span className="vp-message-text">{msg.text}</span>
             </div>
           </div>
         ))}
@@ -390,7 +359,7 @@ export default function RoomScreen({ token, onLeave }) {
   };
 
   return (
-    <div className="vp-fixed vp-bottom-0 md:vp-bottom-5 vp-right-0 md:vp-right-5 vp-z-[9999] vp-w-full md:vp-w-[360px] vp-h-full md:vp-h-[812px] vp-flex vp-flex-col">
+    <div className="vp-room-container">
       <LiveKitRoom
         serverUrl={LIVEKIT_URL}
         token={token}
@@ -398,17 +367,14 @@ export default function RoomScreen({ token, onLeave }) {
         video={false}
         audio={false}
         options={roomOptions}
-        className="vp-relative vp-w-full vp-h-full md:vp-h-[720px]"
+        className="vp-room"
       >
         <RoomContainer onLeave={onLeave} />
       </LiveKitRoom>
 
-      <div className="vp-h-[92px] vp-hidden md:vp-flex vp-items-center vp-justify-center vp-self-end">
-        <div
-          onClick={onLeave}
-          className="vp-w-16 vp-h-16 vp-flex vp-items-center vp-justify-center vp-bg-black vp-rounded-full vp-shadow-lg vp-cursor-pointer"
-        >
-          <X size={30} className="vp-text-white" />
+      <div className="vp-room-close-button-container">
+        <div onClick={onLeave} className="vp-room-close-button">
+          <X size={30} className="vp-room-close-button-icon" />
         </div>
       </div>
     </div>
