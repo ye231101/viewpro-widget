@@ -1,3 +1,68 @@
+.vp-floating-button {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.vp-floating-button-gradient {
+  width: 92px !important;
+  height: 92px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(45deg, #facc15, #ec4899, #a855f7) !important;
+}
+
+.vp-floating-button-white {
+  width: 84px !important;
+  height: 84px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  background-color: #ffffff !important;
+}
+
+.vp-floating-button-avatar-container {
+  position: relative !important;
+  width: 76px !important;
+  height: 76px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  background-color: #1f2937 !important;
+}
+
+.vp-floating-button-avatar {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 9999px !important;
+  object-fit: cover !important;
+  animation: vp-avatar-pulse 1s infinite;
+}
+
+.vp-floating-button-live {
+  position: absolute !important;
+  bottom: -4px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-radius: 4px !important;
+  border: 2px solid #ffffff !important;
+  background-color: #db2777 !important;
+  line-height: 1.5 !important;
+  font-size: 10px !important;
+  font-weight: bold !important;
+  color: #ffffff !important;
+  padding: 0 8px !important;
+}
+
 .vp-scrollbar-none {
   scrollbar-width: none !important;
 }
@@ -28,10 +93,6 @@
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3);
     transform: scale(1);
   }
-}
-
-.vp-avatar-pulse {
-  animation: vp-avatar-pulse 1s infinite;
 }
 
 @keyframes vp-wave {

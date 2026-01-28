@@ -60,13 +60,10 @@ export default function LobbyScreen({ onJoin }) {
 
   if (userList.length > 0) {
     return (
-      <div
-        onClick={onJoin}
-        className="vp-fixed vp-bottom-5 vp-right-5 vp-z-[9999] vp-flex vp-items-center vp-justify-center vp-cursor-pointer"
-      >
-        <div className="vp-w-[92px] vp-h-[92px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-gradient-to-tr vp-from-yellow-400 vp-via-pink-500 vp-to-purple-500">
-          <div className="vp-w-[84px] vp-h-[84px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-white">
-            <div className="vp-relative vp-w-[76px] vp-h-[76px] vp-flex vp-items-center vp-justify-center vp-rounded-full vp-bg-gray-800">
+      <div onClick={onJoin} className="vp-floating-button">
+        <div className="vp-floating-button-gradient">
+          <div className="vp-floating-button-white">
+            <div className="vp-floating-button-avatar-container">
               <div className="vp-wave" />
               <div className="vp-wave" />
               <div className="vp-wave" />
@@ -75,13 +72,11 @@ export default function LobbyScreen({ onJoin }) {
                 src={AVATAR_URL + 'volkmar.jpg'}
                 alt="avatar"
                 crossOrigin="anonymous"
-                className="vp-w-[56px] vp-h-[56px] vp-rounded-full vp-avatar-pulse"
+                className="vp-floating-button-avatar"
               />
             </div>
           </div>
-          <span className="vp-absolute vp--bottom-1 vp-left-1/2 vp--translate-x-1/2 vp-rounded vp-border-2 vp-border-white vp-bg-pink-600 vp-px-2 vp-text-[10px] vp-leading-normal vp-font-bold vp-text-white">
-            LIVE
-          </span>
+          <span className="vp-floating-button-live">LIVE</span>
         </div>
       </div>
     );
