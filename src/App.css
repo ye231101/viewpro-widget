@@ -45,7 +45,7 @@
   height: 56px !important;
   border-radius: 9999px !important;
   object-fit: cover !important;
-  animation: vp-avatar-pulse 1s infinite;
+  animation: vp-floating-button-avatar-pulse 1s infinite;
 }
 
 .vp-floating-button-live {
@@ -343,7 +343,7 @@
   }
 }
 
-@keyframes vp-avatar-pulse {
+@keyframes vp-floating-button-avatar-pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3);
     transform: scale(1);
