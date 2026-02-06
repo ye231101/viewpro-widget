@@ -50,7 +50,7 @@ export default function LobbyScreen({ onJoin }) {
 
   const getCheck = async () => {
     try {
-      const { data } = await api.get('/user/check');
+      const { data } = await api.get('/user?type=check');
       setUserList(data.users);
     } catch (err) {
       console.error('Failed to get user list', err);
